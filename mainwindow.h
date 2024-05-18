@@ -24,12 +24,24 @@ private slots:
 
     void on_recordsBtn_clicked();
 
+    void on_lineEdit_textEdited(const QString &arg1);
+
+    void on_checkBtn_clicked();
+
 private:
     void start();
     void surrender();
     void setStartProps();
-
+    void ProcessRequest();
+    void RandNum();
+    bool checkCows (QString enterednum, size_t indx);
+    bool checkBull(QString enterednum, size_t indx);
     void ProcessingLineEdit();
+    void addItemToTable(int cows, int bulls);
+    void checkInput();
+
+    QString SecretNum;
+    QString EnteredNum;
 
     Ui::MainWindow *ui;
     bool is_game = false;

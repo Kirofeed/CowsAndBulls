@@ -200,7 +200,7 @@ build CowsAndBulls_autogen/timestamp CowsAndBulls_autogen/mocs_compilation.cpp |
 #############################################
 # Phony custom command for CMakeFiles\CowsAndBulls_autogen_timestamp_deps
 
-build CMakeFiles/CowsAndBulls_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/CowsAndBulls_autogen_timestamp_deps: phony C$:/Qt/6.7.0/mingw_64/./bin/moc.exe C$:/Qt/6.7.0/mingw_64/./bin/uic.exe C$:/Qt/6.7.0/mingw_64/lib/libQt6Core.a C$:/Qt/6.7.0/mingw_64/lib/libQt6Widgets.a
+build CMakeFiles/CowsAndBulls_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/CowsAndBulls_autogen_timestamp_deps: phony C$:/Qt/6.7.0/mingw_64/lib/libQt6Core.a C$:/Qt/6.7.0/mingw_64/./bin/uic.exe C$:/Qt/6.7.0/mingw_64/./bin/moc.exe C$:/Qt/6.7.0/mingw_64/lib/libQt6Widgets.a
 
 
 #############################################

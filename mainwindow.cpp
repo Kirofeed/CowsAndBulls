@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <random>
 #include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,26 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     setStartProps();
-
-
-    QFile file("recors.txt");
-
-    // Открываем файл в режиме чтения
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Не удалось открыть файл для чтения";
-    }
-
-    // Создаем объект QTextStream и связываем его с файлом
-    QTextStream in(&file);
-
-    // Читаем текст из файла и выводим его на консоль
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        qDebug() << line;
-    }
-
-    // Закрываем файл
-    file.close();
+    connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::checkInput);
 }
 
 MainWindow::~MainWindow()
@@ -48,8 +30,7 @@ void MainWindow::start() {
     ui->startBtn->setText("Сдаться");
     ui->statusLabel->setText("Игра идет...");
     ui->recordsBtn->setDisabled(true);
-    ui->recordsBtn->setStyleSheet(stylehelper::GetDisableBtnStyle());
-    ui->checkBtn->setStyleSheet("");
+    RandNum();
 }
 
 void MainWindow::surrender()
@@ -58,14 +39,59 @@ void MainWindow::surrender()
     ui->startBtn->setText("Новая игра");
     ui->statusLabel->setText("Игра не начата");
     ui->recordsBtn->setDisabled(false);
-    ui->recordsBtn->setStyleSheet("");
-    ui->checkBtn->setStyleSheet(stylehelper::GetDisableBtnStyle());
 }
 
 void MainWindow::setStartProps()
 {
-    ui->checkBtn->setStyleSheet(stylehelper::GetDisableBtnStyle());
     ProcessingLineEdit();
+    ui->checkBtn->setDisabled(true);
+}
+
+
+
+void MainWindow::ProcessRequest()
+{
+    int cows;
+    int bulls;
+
+    bulls = 0;
+    cows = 0;
+    std::unordered_map<char, int> secretFreq;
+    std::unordered_map<char, int> enteredFreq;
+
+    // Первоначальный проход для нахождения быков
+    for (int i = 0; i < SecretNum.size(); ++i) {
+        if (SecretNum[i] == EnteredNum[i]) {
+            bulls++;
+        } else {
+            char secretChar = SecretNum[i].toLatin1();
+            char enteredChar = EnteredNum[i].toLatin1();
+            // Считаем частоты символов, которые не являются быками
+            secretFreq[secretChar]++;
+            enteredFreq[enteredChar]++;
+        }
+    }
+
+    // Второй проход для нахождения коров
+    for (const auto& pair : enteredFreq) {
+        char digit = pair.first;
+        int countInEntered = pair.second;
+        if (secretFreq.find(digit) != secretFreq.end()) {
+            cows += std::min(countInEntered, secretFreq[digit]);
+        }
+    }
+
+    addItemToTable(cows, bulls);
+}
+
+void MainWindow::RandNum()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(1000, 9999);
+    int random_number = dis(gen);
+    SecretNum = QString::number(random_number);
+    qDebug() << random_number;
 }
 
 void MainWindow::ProcessingLineEdit()
@@ -74,6 +100,34 @@ void MainWindow::ProcessingLineEdit()
     QRegularExpressionValidator *validator = new QRegularExpressionValidator(regExp, this);
     ui->lineEdit->setValidator(validator);
 }
+
+void MainWindow::addItemToTable(int cows, int bulls)
+{
+
+    int rowCount = ui->tableWidget->rowCount();
+    ui->tableWidget->insertRow(rowCount);
+
+
+    QString result;
+    if (bulls != 4) {
+        result = QString("Быков: %1; Коров: %2").arg(bulls).arg(cows);
+    }
+    else {
+        result = QString("Число угадано!!!");
+    }
+
+    ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem(EnteredNum));
+    ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem(result));
+
+}
+
+void MainWindow::checkInput()
+{
+    EnteredNum = ui->lineEdit->text();
+    ProcessRequest();
+}
+
+
 
 
 
@@ -97,4 +151,27 @@ void MainWindow::on_recordsBtn_clicked()
     connect(recordsWindow, &records::finished, recordsWindow, &records::deleteLater);
 }
 
+
+
+void MainWindow::on_lineEdit_textEdited(const QString &arg1)
+{
+    if(is_game) {
+        if (ui->lineEdit->text().size() == 4) {
+            ui->checkBtn->setDisabled(false);
+        }
+        else {
+            ui->checkBtn->setDisabled(true);
+        }
+    }
+    else {
+        ui->checkBtn->setDisabled(true);
+    }
+}
+
+
+void MainWindow::on_checkBtn_clicked()
+{
+    EnteredNum = ui->lineEdit->text();
+    ProcessRequest();
+}
 
