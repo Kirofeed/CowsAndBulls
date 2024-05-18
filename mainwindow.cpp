@@ -4,6 +4,9 @@
 #include "records.h"
 
 #include <QHeaderView>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
 #include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,6 +16,26 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     setStartProps();
+
+
+    QFile file("recors.txt");
+
+    // Открываем файл в режиме чтения
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Не удалось открыть файл для чтения";
+    }
+
+    // Создаем объект QTextStream и связываем его с файлом
+    QTextStream in(&file);
+
+    // Читаем текст из файла и выводим его на консоль
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        qDebug() << line;
+    }
+
+    // Закрываем файл
+    file.close();
 }
 
 MainWindow::~MainWindow()
@@ -27,6 +50,16 @@ void MainWindow::start() {
     ui->recordsBtn->setDisabled(true);
     ui->recordsBtn->setStyleSheet(stylehelper::GetDisableBtnStyle());
     ui->checkBtn->setStyleSheet("");
+}
+
+void MainWindow::surrender()
+{
+    is_game  = false;
+    ui->startBtn->setText("Новая игра");
+    ui->statusLabel->setText("Игра не начата");
+    ui->recordsBtn->setDisabled(false);
+    ui->recordsBtn->setStyleSheet("");
+    ui->checkBtn->setStyleSheet(stylehelper::GetDisableBtnStyle());
 }
 
 void MainWindow::setStartProps()
@@ -49,6 +82,9 @@ void MainWindow::on_startBtn_clicked()
     if (!is_game) {
         start();
     }
+    else {
+        surrender();
+    }
 }
 
 
@@ -60,4 +96,5 @@ void MainWindow::on_recordsBtn_clicked()
 
     connect(recordsWindow, &records::finished, recordsWindow, &records::deleteLater);
 }
+
 

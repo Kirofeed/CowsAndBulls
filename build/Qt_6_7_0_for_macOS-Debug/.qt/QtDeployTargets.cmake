@@ -1,0 +1,1 @@
+set(__QT_DEPLOY_TARGET_CowsAndBulls_FILE /Users/kirilldrozhzha/proga/CowsAndBulls/build/Qt_6_7_0_for_macOS-Debug/CowsAndBulls.app/Contents/MacOS/CowsAndBulls)

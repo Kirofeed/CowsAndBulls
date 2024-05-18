@@ -25,6 +25,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         stylehelper.h stylehelper.cpp
         records.h records.cpp records.ui
+        recors.txt
+
 
 
     )

@@ -26,6 +26,7 @@ private slots:
 
 private:
     void start();
+    void surrender();
     void setStartProps();
 
     void ProcessingLineEdit();
