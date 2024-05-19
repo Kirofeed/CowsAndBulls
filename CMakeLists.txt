@@ -23,8 +23,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CowsAndBulls
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        stylehelper.h stylehelper.cpp
+
         records.h records.cpp records.ui
+        record.h
+        namewindow.h namewindow.cpp namewindow.ui
+        rsc.qrc
 
 
 

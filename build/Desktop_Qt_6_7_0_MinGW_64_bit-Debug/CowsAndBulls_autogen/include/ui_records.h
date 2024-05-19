@@ -10,10 +10,12 @@
 #define UI_RECORDS_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QVBoxLayout>
 
@@ -25,12 +27,16 @@ public:
     QVBoxLayout *verticalLayout;
     QLabel *label;
     QTableWidget *tableWidget;
+    QPushButton *pushButton;
 
     void setupUi(QDialog *records)
     {
         if (records->objectName().isEmpty())
             records->setObjectName("records");
         records->resize(240, 320);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/img/icon.jpg"), QSize(), QIcon::Normal, QIcon::Off);
+        records->setWindowIcon(icon);
         verticalLayout = new QVBoxLayout(records);
         verticalLayout->setObjectName("verticalLayout");
         label = new QLabel(records);
@@ -53,6 +59,11 @@ public:
 
         verticalLayout->addWidget(tableWidget);
 
+        pushButton = new QPushButton(records);
+        pushButton->setObjectName("pushButton");
+
+        verticalLayout->addWidget(pushButton);
+
 
         retranslateUi(records);
 
@@ -67,6 +78,7 @@ public:
         ___qtablewidgetitem->setText(QCoreApplication::translate("records", "\320\237\320\276\320\277\321\213\321\202\320\276\320\272", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
         ___qtablewidgetitem1->setText(QCoreApplication::translate("records", "\320\230\320\274\321\217", nullptr));
+        pushButton->setText(QCoreApplication::translate("records", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 ", nullptr));
     } // retranslateUi
 
 };

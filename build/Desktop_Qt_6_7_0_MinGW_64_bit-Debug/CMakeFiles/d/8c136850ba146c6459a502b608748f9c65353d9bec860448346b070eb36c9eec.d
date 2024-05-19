@@ -1,4 +1,5 @@
 CowsAndBulls_autogen/timestamp: \
+  C:/Qt/6.7.0/mingw_64/include/QtCore/QString \
   C:/Qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/q20memory.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/q20type_traits.h \
@@ -528,8 +529,11 @@ CowsAndBulls_autogen/timestamp: \
   C:/Users/drozh/Documents/CowsAndBulls/mainwindow.cpp \
   C:/Users/drozh/Documents/CowsAndBulls/mainwindow.h \
   C:/Users/drozh/Documents/CowsAndBulls/mainwindow.ui \
+  C:/Users/drozh/Documents/CowsAndBulls/namewindow.cpp \
+  C:/Users/drozh/Documents/CowsAndBulls/namewindow.h \
+  C:/Users/drozh/Documents/CowsAndBulls/namewindow.ui \
+  C:/Users/drozh/Documents/CowsAndBulls/record.h \
   C:/Users/drozh/Documents/CowsAndBulls/records.cpp \
   C:/Users/drozh/Documents/CowsAndBulls/records.h \
   C:/Users/drozh/Documents/CowsAndBulls/records.ui \
-  C:/Users/drozh/Documents/CowsAndBulls/stylehelper.cpp \
-  C:/Users/drozh/Documents/CowsAndBulls/stylehelper.h
+  C:/Users/drozh/Documents/CowsAndBulls/rsc.qrc

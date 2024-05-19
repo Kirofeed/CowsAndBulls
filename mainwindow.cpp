@@ -1,29 +1,39 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "stylehelper.h"
+
 #include "records.h"
+#include "namewindow.h"
 
 #include <QHeaderView>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
 #include <random>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QList>
 #include <QRegularExpression>
 #include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+    recordsDialog(new records(this))
 {
     ui->setupUi(this);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     setStartProps();
     connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::checkInput);
+    highScores = loadHighScores();
+    connect(recordsDialog, &records::clearHighScores, this, &MainWindow::handleClearHighScores);
+    setWindowTitle("Быки и Коровы");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete recordsDialog;
 }
 
 void MainWindow::start() {
@@ -111,25 +121,48 @@ void MainWindow::ProcessingLineEdit()
 
 void MainWindow::addItemToTable(int cows, int bulls)
 {
-    int rowCount = ui->tableWidget->rowCount();
-    ui->tableWidget->insertRow(rowCount);
-
     QString result;
     if (bulls != 4) {
         result = QString("Быков: %1; Коров: %2").arg(bulls).arg(cows);
     } else {
         result = QString("Число угадано!!!");
+
+        Record newRec;
+        {
+            NameWindow dialog(this);
+            if (dialog.exec() == QDialog::Accepted) {
+                QString playerName = dialog.GetName();
+                newRec.score = ui->tableWidget->rowCount() + 1; // Считаем количество попыток
+                newRec.name = playerName;
+            }
+        }
+        if (!newRec.name.isEmpty()) {
+            highScores.append(newRec);
+            std::sort(highScores.begin(), highScores.end());
+            if (highScores.size() > 10) {
+                highScores.removeLast();
+            }
+            saveHighScores(highScores);
+        }
         GameOver();
     }
 
-    ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem(EnteredNum));
-    ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem(result));
+    int rowCount = ui->tableWidget->rowCount();
+    ui->tableWidget->insertRow(rowCount);
+
+    QTableWidgetItem *numItem = new QTableWidgetItem(EnteredNum);
+    QTableWidgetItem *resultItem = new QTableWidgetItem(result);
+
+    // Размещение текста по центру
+    numItem->setTextAlignment(Qt::AlignCenter);
+    resultItem->setTextAlignment(Qt::AlignCenter);
+
+    ui->tableWidget->setItem(rowCount, 0, numItem);
+    ui->tableWidget->setItem(rowCount, 1, resultItem);
 
     QTimer::singleShot(0, this, [this, rowCount]() {
         ui->tableWidget->scrollTo(ui->tableWidget->model()->index(rowCount, 0), QAbstractItemView::PositionAtBottom);
     });
-
-
 }
 
 
@@ -145,14 +178,73 @@ void MainWindow::GameOver()
 {
     is_game = false;
     ui->checkBtn->setDisabled(true);
+    ui->recordsBtn->setDisabled(false);
     ui->startBtn->setText("Новая игра");
     ui->statusLabel->setText("Игра завершена");
 
 }
 
-void MainWindow::writeRecord()
-{
 
+void MainWindow::saveHighScores(const QList<Record> &highScores)
+{
+    QJsonArray scoreArray;
+    for (const Record &record : highScores) {
+        QJsonObject scoreObject;
+        scoreObject["name"] = record.name;
+        scoreObject["score"] = record.score;
+        scoreArray.append(scoreObject);
+    }
+
+    QJsonDocument saveDoc(scoreArray);
+    QFile saveFile(QStringLiteral("highscores.json"));
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open save file.");
+        return;
+    }
+
+    saveFile.write(saveDoc.toJson());
+}
+
+QList<Record> MainWindow::loadHighScores()
+{
+    QFile loadFile(QStringLiteral("highscores.json"));
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open save file.");
+        return QList<Record>();
+    }
+
+    QByteArray saveData = loadFile.readAll();
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    QJsonArray scoreArray = loadDoc.array();
+
+    QList<Record> highScores;
+    for (int i = 0; i < scoreArray.size(); ++i) {
+        QJsonObject scoreObject = scoreArray[i].toObject();
+        Record record;
+        record.name = scoreObject["name"].toString();
+        record.score = scoreObject["score"].toInt();
+        highScores.append(record);
+    }
+
+    return highScores;
+}
+
+void MainWindow::addHighScore(QList<Record> &highScores, const Record &newRecord)
+{
+    // Если таблица рекордов меньше 10 записей, просто добавляем новый результат
+    if (highScores.size() < 10) {
+        highScores.append(newRecord);
+    } else {
+        // Находим худший рекорд
+        auto worstRecordIt = std::max_element(highScores.begin(), highScores.end());
+        // Если новый результат лучше худшего, заменяем его
+        if (newRecord.score < worstRecordIt->score) {
+            *worstRecordIt = newRecord;
+        }
+    }
+    // Сортируем таблицу рекордов
+    std::sort(highScores.begin(), highScores.end());
 }
 
 
@@ -172,11 +264,8 @@ void MainWindow::on_startBtn_clicked()
 
 void MainWindow::on_recordsBtn_clicked()
 {
-    records *recordsWindow = new records(this);
-    recordsWindow->setWindowModality(Qt::WindowModal);
-    recordsWindow->show();
-
-    connect(recordsWindow, &records::finished, recordsWindow, &records::deleteLater);
+    recordsDialog->createRecordsTable(highScores);
+    recordsDialog->exec();
 }
 
 
@@ -201,5 +290,11 @@ void MainWindow::on_checkBtn_clicked()
 {
     EnteredNum = ui->lineEdit->text();
     ProcessRequest();
+}
+
+void MainWindow::handleClearHighScores()
+{
+    highScores.clear();
+    saveHighScores(highScores);
 }
 

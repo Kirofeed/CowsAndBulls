@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-87c000a4cdd99aaefb23.json",
+					"jsonFile" : "directory-.-Debug-5c6b579514ec19f73245.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CowsAndBulls::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CowsAndBulls-Debug-a8cd11a2c2f493d66ca0.json",
+					"jsonFile" : "target-CowsAndBulls-Debug-34732af0ce890805e362.json",
 					"name" : "CowsAndBulls",
 					"projectIndex" : 0
 				},
