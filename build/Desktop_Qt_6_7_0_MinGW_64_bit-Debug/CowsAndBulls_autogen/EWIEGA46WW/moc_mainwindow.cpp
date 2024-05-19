@@ -40,7 +40,6 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "",
     "on_recordsBtn_clicked",
     "on_lineEdit_textEdited",
-    "arg1",
     "on_checkBtn_clicked"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
@@ -64,13 +63,13 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
        1,    0,   38,    2, 0x08,    1 /* Private */,
        3,    0,   39,    2, 0x08,    2 /* Private */,
-       4,    1,   40,    2, 0x08,    3 /* Private */,
-       6,    0,   43,    2, 0x08,    5 /* Private */,
+       4,    0,   40,    2, 0x08,    3 /* Private */,
+       5,    0,   41,    2, 0x08,    4 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    5,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -91,7 +90,6 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_lineEdit_textEdited'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
         // method 'on_checkBtn_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
@@ -106,11 +104,12 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->on_startBtn_clicked(); break;
         case 1: _t->on_recordsBtn_clicked(); break;
-        case 2: _t->on_lineEdit_textEdited((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 2: _t->on_lineEdit_textEdited(); break;
         case 3: _t->on_checkBtn_clicked(); break;
         default: ;
         }
     }
+    (void)_a;
 }
 
 const QMetaObject *MainWindow::metaObject() const

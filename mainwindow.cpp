@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <random>
 #include <QRegularExpression>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +32,10 @@ void MainWindow::start() {
     ui->statusLabel->setText("Игра идет...");
     ui->recordsBtn->setDisabled(true);
     RandNum();
+    ui->tableWidget->setRowCount(0);
+    if (ui->lineEdit->text().size() == 4) {
+        ui->checkBtn->setEnabled(true);
+    }
 }
 
 void MainWindow::surrender()
@@ -39,6 +44,8 @@ void MainWindow::surrender()
     ui->startBtn->setText("Новая игра");
     ui->statusLabel->setText("Игра не начата");
     ui->recordsBtn->setDisabled(false);
+    ui->checkBtn->setDisabled(true);
+    ui->tableWidget->setRowCount(0);
 }
 
 void MainWindow::setStartProps()
@@ -82,6 +89,7 @@ void MainWindow::ProcessRequest()
     }
 
     addItemToTable(cows, bulls);
+
 }
 
 void MainWindow::RandNum()
@@ -103,28 +111,48 @@ void MainWindow::ProcessingLineEdit()
 
 void MainWindow::addItemToTable(int cows, int bulls)
 {
-
     int rowCount = ui->tableWidget->rowCount();
     ui->tableWidget->insertRow(rowCount);
-
 
     QString result;
     if (bulls != 4) {
         result = QString("Быков: %1; Коров: %2").arg(bulls).arg(cows);
-    }
-    else {
+    } else {
         result = QString("Число угадано!!!");
+        GameOver();
     }
 
     ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem(EnteredNum));
     ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem(result));
 
+    QTimer::singleShot(0, this, [this, rowCount]() {
+        ui->tableWidget->scrollTo(ui->tableWidget->model()->index(rowCount, 0), QAbstractItemView::PositionAtBottom);
+    });
+
+
 }
+
 
 void MainWindow::checkInput()
 {
-    EnteredNum = ui->lineEdit->text();
-    ProcessRequest();
+    if ((ui->lineEdit->text().size() == 4) && (is_game)) {
+        EnteredNum = ui->lineEdit->text();
+        ProcessRequest();
+    }
+}
+
+void MainWindow::GameOver()
+{
+    is_game = false;
+    ui->checkBtn->setDisabled(true);
+    ui->startBtn->setText("Новая игра");
+    ui->statusLabel->setText("Игра завершена");
+
+}
+
+void MainWindow::writeRecord()
+{
+
 }
 
 
@@ -153,7 +181,7 @@ void MainWindow::on_recordsBtn_clicked()
 
 
 
-void MainWindow::on_lineEdit_textEdited(const QString &arg1)
+void MainWindow::on_lineEdit_textEdited()
 {
     if(is_game) {
         if (ui->lineEdit->text().size() == 4) {

@@ -24,7 +24,7 @@ private slots:
 
     void on_recordsBtn_clicked();
 
-    void on_lineEdit_textEdited(const QString &arg1);
+    void on_lineEdit_textEdited();
 
     void on_checkBtn_clicked();
 
@@ -39,6 +39,7 @@ private:
     void ProcessingLineEdit();
     void addItemToTable(int cows, int bulls);
     void checkInput();
+    void GameOver();
 
     QString SecretNum;
     QString EnteredNum;

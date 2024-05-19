@@ -352,6 +352,7 @@ C:/Users/drozh/Documents/CowsAndBulls/mainwindow.h
  mdp:C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h
  mdp:C:/Users/drozh/Documents/CowsAndBulls/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CowsAndBulls_autogen/moc_predefs.h
  mdp:C:/Users/drozh/Documents/CowsAndBulls/mainwindow.h
+C:/Users/drozh/Documents/CowsAndBulls/main.cpp
 C:/Users/drozh/Documents/CowsAndBulls/records.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.7.0/mingw_64/include/QtCore/q20functional.h
@@ -704,7 +705,6 @@ C:/Users/drozh/Documents/CowsAndBulls/records.h
  mdp:C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h
  mdp:C:/Users/drozh/Documents/CowsAndBulls/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CowsAndBulls_autogen/moc_predefs.h
  mdp:C:/Users/drozh/Documents/CowsAndBulls/records.h
-C:/Users/drozh/Documents/CowsAndBulls/main.cpp
 C:/Users/drozh/Documents/CowsAndBulls/mainwindow.cpp
  uic:./ui_mainwindow.h
 C:/Users/drozh/Documents/CowsAndBulls/stylehelper.h
